@@ -30,7 +30,7 @@
 
 **Option B**: The SVG icons are already created in `icons/` and Chrome will use them automatically.
 
-### Step 2 — Load the Extension in Chrome
+### Step 2 (Recommend)— Load the Extension in Chrome
 
 1. Open Chrome and navigate to: `chrome://extensions/`
 2. Enable **Developer Mode** (toggle in top-right corner)
