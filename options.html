@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoteNext — Bookmark Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg class="brand-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="url(#grad)"/>
+        <defs><linearGradient id="grad" x1="0" y1="0" x2="32" y2="32">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#7c3aed"/>
+        </linearGradient></defs>
+        <path d="M9 8h14M9 13h14M9 18h8" stroke="white" stroke-width="2.2"
+              stroke-linecap="round"/>
+        <circle cx="22" cy="22" r="4" fill="white" opacity="0.9"/>
+        <path d="M20.5 22l1 1 2-2" stroke="#7c3aed" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-text">NoteNext</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item nav-item--active" data-section="bookmarks" id="navBookmarks">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+        </svg>
+        All Bookmarks
+      </button>
+      <button class="nav-item" data-section="folders" id="navFolders">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+        </svg>
+        Folders
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="newtab.html" class="back-link" id="backToHome">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back to Home
+      </a>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN CONTENT ══════════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- ─ BOOKMARKS SECTION ──────────────────────────────────────── -->
+    <section class="section" id="sectionBookmarks">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">All Bookmarks</h1>
+          <p class="section-sub" id="bmSubtitle">Loading…</p>
+        </div>
+        <div class="section-actions">
+          <div class="search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="search" id="bmSearch" class="search-input"
+                   placeholder="Search bookmarks…" autocomplete="off">
+          </div>
+          <select class="select-input" id="bmFolderFilter">
+            <option value="">All folders</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading" id="bmLoading">
+        <span class="spinner"></span>
+        <span>Loading bookmarks…</span>
+      </div>
+
+      <!-- Empty -->
+      <div class="empty-state hidden" id="bmEmpty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+        </svg>
+        <p class="empty-title" id="bmEmptyTitle">No bookmarks yet</p>
+        <p class="empty-sub">Add bookmarks using the + button on your new tab page.</p>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap hidden" id="bmTable">
+        <table class="data-table" id="bmDataTable" aria-label="All bookmarks">
+          <thead>
+            <tr>
+              <th>Bookmark</th>
+              <th>URL</th>
+              <th>Folder</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bmTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─ FOLDERS SECTION ────────────────────────────────────────── -->
+    <section class="section hidden" id="sectionFolders">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Folders</h1>
+          <p class="section-sub" id="folderSubtitle">Loading…</p>
+        </div>
+        <div class="section-actions">
+          <div class="search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="search" id="folderSearch" class="search-input"
+                   placeholder="Search folders…" autocomplete="off">
+          </div>
+        </div>
+      </div>
+
+      <div class="loading" id="folderLoading">
+        <span class="spinner"></span>
+        <span>Loading folders…</span>
+      </div>
+
+      <div class="empty-state hidden" id="folderEmpty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+        </svg>
+        <p class="empty-title">No folders yet</p>
+        <p class="empty-sub">Create folders using the 📁 button on your new tab page.</p>
+      </div>
+
+      <div class="table-wrap hidden" id="folderTable">
+        <table class="data-table" id="folderDataTable" aria-label="All folders">
+          <thead>
+            <tr>
+              <th>Folder Name</th>
+              <th>Workspace</th>
+              <th>Bookmarks</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="folderTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══ EDIT BOOKMARK MODAL ══════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="editBmOverlay" role="dialog" aria-modal="true"
+     aria-labelledby="editBmTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="editBmTitle">Edit Bookmark</h2>
+      <button class="modal-close" id="editBmClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="editBmTitle2">Title</label>
+        <input class="form-input" type="text" id="editBmTitle2" placeholder="Bookmark title" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="editBmUrl">URL</label>
+        <input class="form-input" type="url" id="editBmUrl" placeholder="https://example.com" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="editBmFolder">Folder</label>
+        <select class="form-input" id="editBmFolder"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="editBmNotes">Notes <span class="label-optional">(optional)</span></label>
+        <textarea class="form-input form-textarea" id="editBmNotes"
+                  placeholder="Any notes about this bookmark…" rows="2"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--secondary" id="editBmCancel">Cancel</button>
+      <button class="btn btn--primary"   id="editBmSave">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT FOLDER MODAL ════════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="editFolderOverlay" role="dialog" aria-modal="true"
+     aria-labelledby="editFolderTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="editFolderTitle">Edit Folder</h2>
+      <button class="modal-close" id="editFolderClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="editFolderName">Folder Name</label>
+        <input class="form-input" type="text" id="editFolderName" placeholder="Folder name" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="editFolderWorkspace">Workspace</label>
+        <select class="form-input" id="editFolderWorkspace"></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--secondary" id="editFolderCancel">Cancel</button>
+      <button class="btn btn--primary"   id="editFolderSave">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONFIRM MODAL ════════════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="confirmOverlay" role="dialog" aria-modal="true"
+     aria-labelledby="confirmTitle">
+  <div class="modal modal--sm">
+    <div class="modal-body" style="text-align:center; padding: 28px 24px 20px;">
+      <div class="confirm-icon" aria-hidden="true">🗑️</div>
+      <p class="confirm-title" id="confirmTitle">Are you sure?</p>
+      <p class="confirm-msg"  id="confirmMsg"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--secondary" id="confirmCancel">Cancel</button>
+      <button class="btn btn--danger"    id="confirmOk">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ════════════════════════════════════════════════════════ -->
+<div class="toast-region" id="toastRegion" aria-live="polite"></div>
+
+<script src="options.js" type="module"></script>
+</body>
+</html>

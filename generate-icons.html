@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TabVault — Icon Generator</title>
+  <style>
+    body { font-family: monospace; background: #080d1a; color: #00d9c8; padding: 20px; }
+    button { background: linear-gradient(135deg,#00d9c8,#6366f1); color: #080d1a; border: none;
+             padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
+    canvas { border: 1px solid #333; margin: 5px; border-radius: 4px; }
+    a { color: #00d9c8; }
+    .status { margin-top: 10px; color: #10b981; }
+    .grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: flex-end; }
+  </style>
+</head>
+<body>
+  <h2>🔖 TabVault Icon Generator</h2>
+  <p>Click the button to generate all PNG icons and download them into your <code>icons/</code> folder.</p>
+  <button onclick="generateAll()">Generate & Download All Icons</button>
+  <div class="grid" id="canvasGrid"></div>
+  <div class="status" id="status"></div>
+
+<script>
+function drawIcon(canvas, size) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = size;
+  canvas.height = size;
+  const dpr = 1;
+  
+  const padding = size * 0.14;
+  const cornerR = size * 0.20;
+  const strokeW = Math.max(1.5, size * 0.065);
+
+  // Background gradient
+  const bgGrad = ctx.createLinearGradient(0, 0, size, size);
+  bgGrad.addColorStop(0, '#0d1425');
+  bgGrad.addColorStop(1, '#080d1a');
+
+  // Rounded background
+  ctx.beginPath();
+  roundRect(ctx, 0, 0, size, size, cornerR);
+  ctx.fillStyle = bgGrad;
+  ctx.fill();
+
+  // Border glow
+  ctx.beginPath();
+  roundRect(ctx, strokeW*0.25, strokeW*0.25, size - strokeW*0.5, size - strokeW*0.5, cornerR);
+  ctx.strokeStyle = 'rgba(0,217,200,0.3)';
+  ctx.lineWidth = strokeW * 0.5;
+  ctx.stroke();
+
+  // Accent gradient for shapes
+  const accent = ctx.createLinearGradient(0, 0, size, size);
+  accent.addColorStop(0, '#00d9c8');
+  accent.addColorStop(1, '#6366f1');
+
+  // Glow effect
+  ctx.shadowColor = '#00d9c8';
+  ctx.shadowBlur = size * 0.12;
+
+  // Bookmark body outline
+  const bLeft = padding;
+  const bRight = size - padding;
+  const bTop = padding * 0.9;
+  const bBottom = size - padding * 0.7;
+  const arcR = size * 0.08;
+  const vCutDepth = size * 0.22;
+  const midX = size / 2;
+
+  ctx.beginPath();
+  // Top-left corner
+  ctx.moveTo(bLeft + arcR, bTop);
+  ctx.lineTo(bRight - arcR, bTop);
+  ctx.arcTo(bRight, bTop, bRight, bTop + arcR, arcR);
+  ctx.lineTo(bRight, bBottom);
+  // Bottom right → center v-notch
+  ctx.lineTo(midX + size * 0.02, bBottom - vCutDepth);
+  // V notch bottom point
+  ctx.lineTo(midX, bBottom - vCutDepth - size * 0.08);
+  ctx.lineTo(midX - size * 0.02, bBottom - vCutDepth);
+  // Bottom left
+  ctx.lineTo(bLeft, bBottom);
+  ctx.lineTo(bLeft, bTop + arcR);
+  ctx.arcTo(bLeft, bTop, bLeft + arcR, bTop, arcR);
+  ctx.closePath();
+
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = strokeW;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Small decorative dot / star at center top
+  if (size >= 32) {
+    ctx.shadowBlur = size * 0.08;
+    ctx.beginPath();
+    ctx.arc(midX, bTop + size * 0.14, size * 0.045, 0, Math.PI * 2);
+    ctx.fillStyle = accent;
+    ctx.fill();
+  }
+
+  ctx.shadowBlur = 0;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+}
+
+function generateAll() {
+  const sizes = [16, 32, 48, 128];
+  const grid = document.getElementById('canvasGrid');
+  grid.innerHTML = '';
+  const status = document.getElementById('status');
+  status.innerHTML = '';
+
+  sizes.forEach(size => {
+    const wrap = document.createElement('div');
+    wrap.style.textAlign = 'center';
+
+    const canvas = document.createElement('canvas');
+    drawIcon(canvas, size);
+    wrap.appendChild(canvas);
+
+    const label = document.createElement('div');
+    label.style.fontSize = '11px';
+    label.style.marginTop = '4px';
+    label.textContent = `${size}×${size}`;
+    wrap.appendChild(label);
+
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = `icon${size}.png`;
+    link.textContent = `⬇ Download`;
+    link.style.fontSize = '11px';
+    link.style.display = 'block';
+    link.style.marginTop = '4px';
+    wrap.appendChild(link);
+
+    grid.appendChild(wrap);
+
+    // Auto-trigger download
+    setTimeout(() => link.click(), size * 5);
+  });
+
+  status.innerHTML = `
+    ✅ <strong>4 icons generated!</strong><br>
+    Save each downloaded file into your <code>tabvault-extension/icons/</code> folder as:<br>
+    <code>icon16.png</code>, <code>icon32.png</code>, <code>icon48.png</code>, <code>icon128.png</code>
+  `;
+}
+</script>
+</body>
+</html>

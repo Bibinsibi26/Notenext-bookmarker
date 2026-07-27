@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoteNext</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="newtab.css">
+</head>
+<body>
+
+  <!-- ══ BACKGROUND ══════════════════════════════════════════════ -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    <div class="bg-orb bg-orb-4"></div>
+  </div>
+
+  <!-- ══ WORKSPACE TAB BAR ════════════════════════════════════════ -->
+  <header class="ws-bar" id="wsBar">
+    <button class="ws-arrow" id="wsArrowLeft" aria-label="Scroll left">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="ws-tabs-scroll" id="wsTabsScroll">
+      <div class="ws-tabs" id="wsTabs">
+        <!-- Workspace tabs injected by JS -->
+      </div>
+    </div>
+    <button class="ws-arrow" id="wsArrowRight" aria-label="Scroll right">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <button class="ws-add-btn" id="wsAddBtn" aria-label="New workspace">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </header>
+
+  <!-- ══ CARDS GRID ═══════════════════════════════════════════════ -->
+  <main class="cards-area" id="cardsArea">
+    <div class="cards-grid" id="cardsGrid">
+      <!-- Folder cards injected by JS -->
+    </div>
+    <!-- Empty workspace state -->
+    <div class="ws-empty" id="wsEmpty" style="display:none">
+      <div class="ws-empty-icon">📂</div>
+      <h2 class="ws-empty-title">This workspace is empty</h2>
+      <p class="ws-empty-sub">Use the folder button on the right to add folders here.</p>
+    </div>
+  </main>
+
+  <!-- ══ RIGHT FLOATING ACTION BUTTONS ════════════════════════════ -->
+  <aside class="right-fab" id="rightFab">
+    <button class="fab-btn" id="fabSearch" title="Search (Alt+F)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <button class="fab-btn" id="fabAddBookmark" title="Add bookmark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+    </button>
+    <button class="fab-btn" id="fabSettings" title="Settings">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </button>
+    <button class="fab-btn" id="fabAddFolder" title="Add folder to workspace">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+    </button>
+  </aside>
+
+  <!-- ══ SEARCH OVERLAY ════════════════════════════════════════════ -->
+  <div class="search-overlay" id="searchOverlay" style="display:none">
+    <div class="search-overlay-backdrop" id="searchBackdrop"></div>
+    <div class="search-panel">
+      <div class="search-input-wrap">
+        <svg class="search-panel-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" class="search-panel-input" id="searchPanelInput" placeholder="Search all bookmarks…" autocomplete="off" spellcheck="false">
+        <button class="search-panel-close" id="searchPanelClose">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="search-results" id="searchResults">
+        <div class="search-placeholder" id="searchPlaceholder">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <span>Start typing to search…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODALS ════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modalOverlay"></div>
+
+  <!-- Add/Edit Bookmark Modal -->
+  <div class="modal" id="bookmarkModal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="bookmarkModalTitle">Add Bookmark</h2>
+      <button class="modal-close" id="bookmarkModalClose">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">URL *</label>
+        <div class="url-preview-wrap">
+          <img id="bmFaviconPreview" class="bm-url-favicon" src="" alt="" style="display:none">
+          <input type="url" class="form-input" id="bmUrl" placeholder="https://example.com" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input type="text" class="form-input" id="bmTitle" placeholder="Page title" autocomplete="off">
+      </div>
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label class="form-label">Workspace</label>
+          <select class="form-input form-select" id="bmWorkspace">
+            <option value="">No workspace</option>
+          </select>
+        </div>
+        <div class="form-group flex-1">
+          <label class="form-label">Folder</label>
+          <select class="form-input form-select" id="bmFolder">
+            <option value="">No folder</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-input form-textarea" id="bmNotes" placeholder="Personal notes…" rows="2"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="bookmarkModalCancel">Cancel</button>
+      <button class="btn-primary" id="bookmarkModalSave">Save Bookmark</button>
+    </div>
+  </div>
+
+  <!-- Add/Edit Folder Modal -->
+  <div class="modal modal-sm" id="folderModal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="folderModalTitle">New Folder</h2>
+      <button class="modal-close" id="folderModalClose">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Folder Name *</label>
+        <input type="text" class="form-input" id="folderName" placeholder="e.g. Design Resources" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Workspace</label>
+        <select class="form-input form-select" id="folderWorkspace">
+          <option value="">No workspace</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="folderModalCancel">Cancel</button>
+      <button class="btn-primary" id="folderModalSave">Create Folder</button>
+    </div>
+  </div>
+
+  <!-- Add Workspace Modal -->
+  <div class="modal modal-xs" id="workspaceModal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="workspaceModalTitle">New Workspace</h2>
+      <button class="modal-close" id="workspaceModalClose">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Workspace Name *</label>
+        <input type="text" class="form-input" id="workspaceName" placeholder="e.g. Side Project" autocomplete="off">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="workspaceModalCancel">Cancel</button>
+      <button class="btn-primary" id="workspaceModalSave">Create</button>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal modal-sm" id="settingsModal">
+    <div class="modal-header">
+      <h2 class="modal-title">Settings</h2>
+      <button class="modal-close" id="settingsModalClose">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-section">
+        <h3 class="settings-title">Display</h3>
+        <div class="settings-row">
+          <span>Show Favicons</span>
+          <label class="toggle"><input type="checkbox" id="setFavicons" checked><span class="track"></span></label>
+        </div>
+        <div class="settings-row">
+          <span>Compact Cards</span>
+          <label class="toggle"><input type="checkbox" id="setCompact"><span class="track"></span></label>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-title">Appearance</h3>
+        <!-- Accent color -->
+        <div class="settings-row">
+          <span>Accent Color</span>
+          <label class="color-swatch-wrap" title="Pick accent color">
+            <input type="color" id="setAccentColor" value="#2d8f46">
+            <span class="color-swatch" id="accentSwatch"></span>
+          </label>
+        </div>
+        <!-- Wallpaper -->
+        <div class="settings-row">
+          <span>Background Image</span>
+          <div style="display:flex;gap:6px">
+            <button class="settings-btn" id="settingsWallpaperBtn" style="padding:5px 10px;font-size:0.78rem">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Upload
+            </button>
+            <button class="settings-btn settings-btn--danger" id="settingsRemoveWallpaperBtn" style="padding:5px 10px;font-size:0.78rem">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-title">Workspaces</h3>
+        <div class="settings-ws-list" id="settingsWsList">
+          <!-- rendered by JS -->
+        </div>
+        <div class="settings-ws-add">
+          <input type="text" class="form-input" id="settingsWsInput" placeholder="New workspace name…" style="flex:1">
+          <button class="btn-primary" id="settingsWsAddBtn" style="padding:8px 14px;white-space:nowrap;flex-shrink:0">Add</button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-title">Data</h3>
+        <div class="settings-btn-row">
+          <button class="settings-btn" id="settingsExportBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export JSON
+          </button>
+          <button class="settings-btn" id="settingsImportBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Import JSON
+          </button>
+          <button class="settings-btn settings-btn--danger" id="settingsClearBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+            Clear All Data
+          </button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3 class="settings-title">Shortcuts</h3>
+        <div class="shortcut-grid">
+          <div class="sc-row"><kbd>Alt+S</kbd><span>Quick save tab</span></div>
+          <div class="sc-row"><kbd>Alt+F</kbd><span>Open search</span></div>
+          <div class="sc-row"><kbd>Esc</kbd><span>Close / dismiss</span></div>
+        </div>
+      </div>
+      <div class="settings-version">TabVault v2.0 — 100% local storage</div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal modal-xs" id="confirmModal">
+    <div class="modal-body" style="padding-top:24px;text-align:center">
+      <div style="font-size:2.2rem;margin-bottom:10px" id="confirmIcon">🗑️</div>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:6px" id="confirmTitle">Are you sure?</h3>
+      <p style="font-size:0.85rem;color:var(--text-muted)" id="confirmMessage">This cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="confirmCancel">Cancel</button>
+      <button class="btn-danger" id="confirmOk">Delete</button>
+    </div>
+  </div>
+
+  <!-- Card Context Menu -->
+  <div class="ctx-menu" id="ctxMenu" style="display:none">
+    <div class="ctx-item" id="ctxAddBookmark">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Add Bookmark
+    </div>
+    <div class="ctx-item" id="ctxEditFolder">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z"/></svg>
+      Rename Folder
+    </div>
+    <div class="ctx-divider"></div>
+    <div class="ctx-item ctx-item--danger" id="ctxDeleteFolder">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+      Delete Folder
+    </div>
+  </div>
+
+  <!-- Bookmark Context Menu -->
+  <div class="ctx-menu" id="bmCtxMenu" style="display:none">
+    <div class="ctx-item" id="bmCtxOpen">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Open in new tab
+    </div>
+    <div class="ctx-item" id="bmCtxCopy">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Copy URL
+    </div>
+    <div class="ctx-item" id="bmCtxEdit">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z"/></svg>
+      Edit
+    </div>
+    <div class="ctx-divider"></div>
+    <div class="ctx-item ctx-item--danger" id="bmCtxDelete">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+      Delete
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <!-- Hidden file inputs (NEVER visible, triggered only via JS .click()) -->
+  <input type="file" id="importFile"   accept=".json"   class="hidden-file-input">
+  <input type="file" id="wallpaperFile" accept="image/*" class="hidden-file-input">
+
+  <script type="module" src="newtab.js"></script>
+</body>
+</html>
