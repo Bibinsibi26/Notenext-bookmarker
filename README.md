@@ -1,4 +1,4 @@
-readme_content = """# 🔖 NoteNext — Smart Bookmark Manager
+ NoteNext — Smart Bookmark Manager
 
 > A privacy-focused, 100% free Chrome extension that transforms your new tab into a powerful, beautifully designed bookmark dashboard. Completely local, zero configuration, and zero cloud tracking — your bookmarks remain strictly yours.
 
